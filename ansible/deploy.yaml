@@ -1,10 +1,20 @@
 ---
+- name: Display kubeconfig file
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Read kubeconfig file
+      slurp:
+        src: "{{ kubeconfig_path }}"
+      register: kubeconfig_file
+
+    - name: Print kubeconfig file contents
+      debug:
+        var: kubeconfig_file.content | b64decode | string
+
 - name: Deploy NGINX to Kubernetes
   hosts: localhost
   gather_facts: no
   tasks:
     - name: Create NGINX Deployment
-      command: kubectl apply -f kubemanifest/deployment.yaml --kubeconfig={{ kubeconfig_path }} --validate=false
-
-
-
+      command: kubectl apply -f kubemanifest/deployment.yaml --kubeconfig={{ kubeconfig_path }}
