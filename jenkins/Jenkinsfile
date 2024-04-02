@@ -44,7 +44,7 @@ pipeline {
 
                 // Run ansible playbook to deploy NGINX to Kubernetes
                 script {
-                    sh 'ansible-playbook ansible/deploy.yaml'
+                    sh 'ansible-playbook -vvv ansible/deploy.yaml'
                 }
             }
         }
