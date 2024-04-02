@@ -5,5 +5,11 @@
   tasks:
     - name: Create NGINX Deployment
       shell: kubectl apply -f kubemanifest/deployment.yaml
+      args:
+        warn: yes
+      register: result
+
+    - debug:
+        var: result
 
 
