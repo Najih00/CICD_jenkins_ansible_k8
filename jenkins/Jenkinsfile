@@ -44,6 +44,9 @@ pipeline {
 
                 // Run ansible playbook to deploy NGINX to Kubernetes
                 script {
+                    // Print the content of the kubemanifest directory for debugging
+                    sh 'ls -l kubemanifest'
+                    // Run ansible playbook to deploy NGINX to Kubernetes
                     sh 'ansible-playbook -vvv ansible/deploy.yaml'
                 }
             }
