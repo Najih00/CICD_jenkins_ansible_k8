@@ -4,12 +4,6 @@
   gather_facts: no
   tasks:
     - name: Create NGINX Deployment
-      shell: kubectl apply -f kubemanifest/deployment.yaml
-      args:
-        warn: yes
-      register: result
-
-    - debug:
-        var: result
+      command: kubectl apply -f kubemanifest/deployment.yaml
 
 
