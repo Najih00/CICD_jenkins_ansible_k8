@@ -31,7 +31,7 @@ pipeline {
                 script {
                     sh 'pwd '
                     sh 'ls -l '
-                    sh 'ls -l '
+                    sh 'ls -l ansible/*'
                 }
             }
         }
