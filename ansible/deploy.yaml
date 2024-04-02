@@ -4,7 +4,6 @@
   gather_facts: no
   tasks:
     - name: Create NGINX Deployment
-      k8s:
-        state: present
-        definition: "{{ lookup('template', 'kubemanifest/deployment.yaml') }}"
+      shell: kubectl apply -f kubemanifests/deployment.yaml
+
 
