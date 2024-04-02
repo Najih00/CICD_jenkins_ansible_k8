@@ -26,7 +26,6 @@ pipeline {
             }
         }
 
-            stages {
         stage('Print Workspace Contents') {
             steps {
                 script {
@@ -35,6 +34,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Deploy with Ansible') {
             steps {
