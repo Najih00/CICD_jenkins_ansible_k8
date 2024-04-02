@@ -44,7 +44,7 @@ pipeline {
                 // Retrieve kubeconfig file using withCredentials
                 withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
                     // Run ansible playbook and pass kubeconfig_path variable
-                    sh "ansible-playbook -vvv ansible/deploy.yaml --extra-vars 'kubeconfig_path=${env.KUBECONFIG}'"
+                    sh "ansible-playbook -vvv ansible/deploy.yaml --extra-vars 'kubeconfig_path=$KUBECONFIG'"
                 }
             }
         }
