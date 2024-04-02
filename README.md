@@ -8,5 +8,5 @@ git status
 git remote add origin https://github.com/Najih00/CICD_jenkins_ansible_k8.git
 # commit
 git commit -m "Initial commit"
-#push to origin master
+# push to origin master
 git push -u origin master
