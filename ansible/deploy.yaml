@@ -4,7 +4,7 @@
   gather_facts: no
   tasks:
     - name: Create NGINX Deployment
-      command: kubectl apply -f kubemanifest/deployment.yaml --kubeconfig={{ kubeconfig_path }}
+      command: kubectl apply -f kubemanifest/deployment.yaml --kubeconfig={{ kubeconfig_path }} --validate=false
 
 
 
