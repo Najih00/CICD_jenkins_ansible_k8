@@ -21,7 +21,7 @@ pipeline {
 
                 // Use withCredentials to access kubeconfig file securely
                 withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
-                    sh 'kubectl version --client'
+                    sh 'kubectl version --client --kubeconfig=$KUBECONFIG'
                 }
             }
         }
@@ -36,7 +36,6 @@ pipeline {
             }
         }
 
-
         stage('Deploy with Ansible') {
             steps {
                 // Checkout code from GitHub repository
@@ -44,8 +43,8 @@ pipeline {
 
                 // Run ansible playbook to deploy NGINX to Kubernetes
                 script {
-                    // Run ansible playbook to deploy NGINX to Kubernetes
-                    sh 'ansible-playbook -vvv ansible/deploy.yaml'
+                    // Run ansible playbook to deploy NGINX to Kubernetes -vvv is for debuging
+                    sh 'ansible-playbook -vvv ansible/deploy.yaml --extra-vars "kubeconfig_path=$KUBECONFIG"'
                 }
             }
         }
