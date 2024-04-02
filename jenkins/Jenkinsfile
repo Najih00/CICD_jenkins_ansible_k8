@@ -1,0 +1,46 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Test Ansible Installation') {
+            steps {
+                // Checkout code from GitHub repository
+                checkout scm
+
+                // Run Ansible command to display version
+                script {
+                    sh 'ansible --version'
+                }
+            }
+        }
+
+        stage('Test kubectl Installation') {
+            steps {
+                // Checkout code from GitHub repository
+                checkout scm
+
+                // Use withCredentials to access kubeconfig file securely
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl version --client'
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                // Checkout code from GitHub repository
+                checkout scm
+
+                // Run ansible playbook to deploy NGINX to Kubernetes
+                script {
+                    sh 'ansible-playbook ansible/deploy.yaml'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+    }
+}
