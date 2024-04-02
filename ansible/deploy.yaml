@@ -1,4 +1,3 @@
----
 - name: Deploy NGINX to Kubernetes
   hosts: localhost
   gather_facts: no
@@ -7,3 +6,5 @@
       k8s:
         state: present
         definition: "{{ lookup('file', 'kubemanifest/deployment.yaml') }}"
+  tags: always  # Add tags to ensure the playbook always runs
+  verbosity: 3  # Enable verbose output
