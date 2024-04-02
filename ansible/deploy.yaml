@@ -3,14 +3,13 @@
   hosts: localhost
   gather_facts: false
   tasks:
-    - name: Read kubeconfig file
-      slurp:
-        src: "{{ kubeconfig_path }}"
+    - name: Print kubeconfig file contents
+      shell: cat "{{ kubeconfig_path }}"
       register: kubeconfig_file
 
-    - name: Print kubeconfig file contents
+    - name: Display kubeconfig file content
       debug:
-        var: kubeconfig_file.content | b64decode | string
+        var: kubeconfig_file.stdout_lines
 
 - name: Deploy NGINX to Kubernetes
   hosts: localhost
