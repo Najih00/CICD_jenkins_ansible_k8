@@ -2,6 +2,40 @@ pipeline {
     agent any
 
     stages {
+        stage('Test Ansible Installation') {
+            steps {
+                // Checkout code from GitHub repository
+                checkout scm
+
+                // Run Ansible command to display version
+                script {
+                    sh 'ansible --version'
+                }
+            }
+        }
+
+        stage('Test kubectl Installation') {
+            steps {
+                // Checkout code from GitHub repository
+                checkout scm
+
+                // Use withCredentials to access kubeconfig file securely
+                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
+                    sh 'kubectl version --client --kubeconfig=$KUBECONFIG'
+                }
+            }
+        }
+
+        stage('Print Workspace Contents') {
+            steps {
+                script {
+                    sh 'pwd '
+                    sh 'ls -l '
+                    sh 'ls -l ansible/*'
+                }
+            }
+        }
+
         stage('Deploy with Ansible') {
             steps {
                 // Checkout code from GitHub repository
@@ -13,6 +47,11 @@ pipeline {
                     sh "ansible-playbook -vvv ansible/deploy.yaml --extra-vars 'kubeconfig_path=${env.KUBECONFIG}'"
                 }
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
         }
     }
 }
