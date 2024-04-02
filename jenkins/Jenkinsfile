@@ -26,6 +26,16 @@ pipeline {
             }
         }
 
+            stages {
+        stage('Print Workspace Contents') {
+            steps {
+                script {
+                    sh 'ls -l $WORKSPACE'
+                    sh 'ls -l $WORKSPACE/kubemanifests'
+                }
+            }
+        }
+
         stage('Deploy with Ansible') {
             steps {
                 // Checkout code from GitHub repository
