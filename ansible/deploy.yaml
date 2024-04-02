@@ -6,5 +6,5 @@
     - name: Create NGINX Deployment
       k8s:
         state: present
-        definition: "{{ lookup('file', 'kubemanifest/deployment.yaml') }}"
+        definition: "{{ lookup('template', 'kubemanifest/deployment.yaml') }}"
 
