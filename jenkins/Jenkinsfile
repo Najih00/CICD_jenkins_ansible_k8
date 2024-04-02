@@ -29,8 +29,9 @@ pipeline {
         stage('Print Workspace Contents') {
             steps {
                 script {
-                    sh 'ls -l $WORKSPACE'
-                    sh 'ls -l $WORKSPACE/kubemanifests'
+                    sh 'pwd '
+                    sh 'ls -l '
+                    sh 'ls -l '
                 }
             }
         }
