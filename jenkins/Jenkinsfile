@@ -2,56 +2,48 @@ pipeline {
     agent any
 
     stages {
-        stage('Test Ansible Installation') {
+        stage('Clone Git Repository') {
             steps {
-                // Checkout code from GitHub repository
-                checkout scm
+                // Clone the Git repository
+                git 'https://github.com/your/repository.git'
+            }
+        }
 
-                // Run Ansible command to display version
-                script {
-                    sh 'ansible --version'
+        stage('Retrieve Files') {
+            steps {
+                // Navigate to the ansible folder and retrieve playbook
+                dir('ansible') {
+                    sh 'cp playbook.yaml ../'
+                }
+
+                // Navigate to the jenkins folder and retrieve Jenkins file
+                dir('jenkins') {
+                    sh 'cp Jenkinsfile ../'
+                }
+
+                // Navigate to the kubemanifest folder and retrieve deployment.yaml
+                dir('kubemanifest') {
+                    sh 'cp deployment.yaml ../'
                 }
             }
         }
 
-        stage('Test kubectl Installation') {
+        stage('Test Kubeconfig') {
             steps {
-                // Checkout code from GitHub repository
-                checkout scm
-
-                // Use withCredentials to access kubeconfig file securely
-                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
-                    sh 'kubectl version --client --kubeconfig=$KUBECONFIG'
-                }
-            }
-        }
-
-        stage('Print Workspace Contents') {
-            steps {
-                script {
-                    sh 'pwd '
-                    sh 'ls -l '
-                    sh 'ls -l ansible/*'
+                withCredentials([file(credentialsId: 'kubeconfig-credential', variable: 'KUBECONFIG')]) {
+                    sh 'cat $KUBECONFIG > kubeconfig.yaml'
+                    sh 'cat kubeconfig.yaml' // Display kubeconfig content (optional)
                 }
             }
         }
 
         stage('Deploy with Ansible') {
             steps {
-                // Checkout code from GitHub repository
-                checkout scm
-
-                // Retrieve kubeconfig file using withCredentials
-                withCredentials([file(credentialsId: 'kubeconfig-file', variable: 'KUBECONFIG')]) {
-                    // Run ansible playbook and pass kubeconfig_path variable
-                    sh "ansible-playbook -vvv ansible/deploy.yaml --extra-vars 'kubeconfig_path=$KUBECONFIG'"
+                script {
+                    // Run Ansible playbook
+                    sh 'ansible-playbook playbook.yaml'
                 }
             }
-        }
-    }
-    post {
-        always {
-            cleanWs()
         }
     }
 }
