@@ -3,4 +3,4 @@
   hosts: localhost
   tasks:
     - name: Apply test deployment
-      command: kubectl apply -f test_deployment.yaml --kubeconfig=kubeconfig.yaml
+      command: kubectl apply -f deployment.yaml --kubeconfig=kubeconfig.yaml

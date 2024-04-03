@@ -32,7 +32,7 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig-credential', variable: 'KUBECONFIG')]) {
                     sh 'cat $KUBECONFIG > kubeconfig.yaml'
-                    sh 'cat kubeconfig.yaml' // Display kubeconfig content (optional)
+                  //  sh 'cat kubeconfig.yaml' // Display kubeconfig content (optional)
                 }
             }
         }
