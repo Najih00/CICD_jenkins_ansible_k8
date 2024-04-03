@@ -1,27 +1,6 @@
 ---
-- name: Display kubeconfig file
+- name: Deploy Application to Kubernetes
   hosts: localhost
-  gather_facts: false
   tasks:
-    - name: Read kubeconfig file
-      slurp:
-        src: "{{ kubeconfig_path }}"
-      register: kubeconfig_data
-
-    - name: Debug kubeconfig file contents
-      debug:
-        var: kubeconfig_data
-
-- name: Deploy NGINX to Kubernetes
-  hosts: localhost
-  gather_facts: no
-  tasks:
-    - name: Create NGINX Deployment
-      shell: kubectl apply -f kubemanifest/deployment.yaml --kubeconfig="{{ kubeconfig_path }}"
-      register: kubectl_output
-      ignore_errors: true  # Ignore errors if kubectl apply fails
-
-    - name: Debug kubectl output
-      debug:
-        var: kubectl_output
-
+    - name: Apply test deployment
+      command: kubectl apply -f test_deployment.yaml --kubeconfig=kubeconfig.yaml
