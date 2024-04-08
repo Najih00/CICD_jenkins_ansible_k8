@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
-        NGINX_TAG = env.BUILD_NUMBER                       // NGINX tag is set to Jenkins build number
+        NGINX_TAG = "${env.BUILD_NUMBER}"                      // NGINX tag is set to Jenkins build number
     }
 
     stages {
