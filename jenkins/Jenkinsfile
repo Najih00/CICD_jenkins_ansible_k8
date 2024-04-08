@@ -58,8 +58,8 @@ pipeline {
         stage('Modify deployment file with env variables') {
             steps {
                 // Replace placeholders in deployment.yaml with actual image details
-                sh "sed -i 's|{{DOCKER_HUB_REPO}}|${LOWERCASE_REPO}|g' deployment.yaml"
-                sh "sed -i 's|{{NGINX_TAG}}|${IMAGE_TAG}|g' deployment.yaml"
+                sh "sed -i \"s|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g\" deployment.yaml"
+                sh "sed -i \"s|{{NGINX_TAG}}|${IMAGE_TAG}|g\" deployment.yaml"
                 
                 // Print the modified deployment file for verification
                 sh "cat deployment.yaml"
