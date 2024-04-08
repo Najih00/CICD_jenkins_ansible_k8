@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
         NGINX_TAG = "${env.BUILD_NUMBER}"                      // NGINX tag is set to Jenkins build number
+        IMAGE_FULL_TAG = "${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
     stages {
@@ -33,6 +34,23 @@ pipeline {
             }
         }
 
+
+        stage('Build and Push Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    // Log in to Docker Hub
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    
+                    // Tag the image with build number
+                    sh "docker tag nginx $IMAGE_FULL_TAG"
+                    
+                    // Push the image to Docker Hub
+                    sh "docker push $IMAGE_FULL_TAG"
+                }
+            }
+
+
+        
         stage('Test Kubeconfig') {
             steps {
                 withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
