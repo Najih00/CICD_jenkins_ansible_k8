@@ -2,13 +2,14 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'NGINX_TAG', defaultValue: "${env.BUILD_NUMBER}", description: 'NGINX tag')
+        string(name: 'NGINX_TAG', defaultValue: '', description: 'NGINX Tag')
     }
 
     environment {
         DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
         IMAGE_NAME = 'dnajih/sendimage'
-        IMAGE_FULL_TAG = "${IMAGE_NAME}:${NGINX_TAG}"
+        IMAGE_TAG = "${params.NGINX_TAG}"
+        IMAGE_FULL_TAG = "${IMAGE_NAME}:${IMAGE_TAG}"
     }
 
     stages {
@@ -44,7 +45,7 @@ pipeline {
                     // Log in to Docker Hub
                     sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
                     
-                    // Tag the image with the NGINX_TAG
+                    // Tag the image with specified tag
                     sh "docker tag nginx $IMAGE_FULL_TAG"
                     
                     // Push the image to Docker Hub
@@ -57,7 +58,7 @@ pipeline {
             steps {
                 // Replace placeholders in deployment.yaml with actual image details
                 sh "sed -i 's|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g' deployment.yaml"
-                sh "sed -i 's|{{NGINX_TAG}}|${NGINX_TAG}|g' deployment.yaml"
+                sh "sed -i 's|{{NGINX_TAG}}|${IMAGE_TAG}|g' deployment.yaml"
             }
         }
 
