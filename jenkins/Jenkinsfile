@@ -57,8 +57,6 @@ pipeline {
 
         stage('Modify deployment file with env variables') {
             steps {
-                // Convert NGINX_TAG to lowercase
-                def lowercaseTag = IMAGE_TAG.toLowerCase()
                 // Replace placeholders in deployment.yaml with actual image details
                 sh "sed -i 's|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g' deployment.yaml"
                 sh "sed -i 's|{{NGINX_TAG}}|${IMAGE_TAG}|g' deployment.yaml"
