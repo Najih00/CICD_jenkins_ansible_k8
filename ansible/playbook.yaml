@@ -4,3 +4,8 @@
   tasks:
     - name: Apply test deployment
       command: kubectl apply -f deployment.yaml --kubeconfig=kubeconfig.yaml
+
+    # Apply Kubernetes Service
+    - name: Apply Kubernetes Service
+      command: kubectl apply -f nginx-service.yaml --kubeconfig=kubeconfig.yaml
+

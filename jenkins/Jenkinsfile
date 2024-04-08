@@ -37,6 +37,10 @@ pipeline {
                 dir('kubemanifest') {
                     sh 'cp deployment.yaml ../'
                 }
+
+                dir('kubemanifest') {
+                    sh 'cp nginx-service.yaml ../'
+                }
             }
         }
 
