@@ -62,7 +62,7 @@ pipeline {
                 // sh "sed -i \"s|{{NGINX_TAG}}|${IMAGE_TAG}|g\" deployment.yaml"
 
                 // Replace placeholders in deployment.yaml with actual image details
-                h "envsubst < deployment.yaml > deployment.yaml.tmp && mv deployment.yaml.tmp deployment.yaml"
+                sh "envsubst < deployment.yaml > deployment.yaml.tmp && mv deployment.yaml.tmp deployment.yaml"
                 
                 // Print the modified deployment file for verification
                 sh "cat deployment.yaml"
