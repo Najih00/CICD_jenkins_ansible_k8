@@ -9,7 +9,8 @@ pipeline {
         DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
         IMAGE_NAME = 'dnajih/sendimage'
         IMAGE_TAG = "${params.NGINX_TAG}"
-        IMAGE_FULL_TAG = "${IMAGE_NAME}:${IMAGE_TAG}"
+        OWERCASE_REPO = DOCKER_HUB_REPO.toLowerCase()  // Convert repository name to lowercase
+        IMAGE_FULL_TAG = "${OWERCASE_REPO}:${IMAGE_TAG}"
     }
 
     stages {
