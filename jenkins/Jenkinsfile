@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
+        NGINX_TAG = env.BUILD_NUMBER                       // NGINX tag is set to Jenkins build number
+    }
+
     stages {
         stage('Clone Git Repository') {
             steps {
@@ -30,10 +35,21 @@ pipeline {
 
         stage('Test Kubeconfig') {
             steps {
-                withCredentials([file(credentialsId: 'kubeconfig-credential', variable: 'KUBECONFIG')]) {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh 'cat $KUBECONFIG > kubeconfig.yaml'
                   //  sh 'cat kubeconfig.yaml' // Display kubeconfig content (optional)
                 }
+            }
+        }
+
+        stage('Deploy NGINX to AKS') {
+            steps {
+                // Replace placeholders in deployment.yaml with actual image details
+                sh "sed -i 's|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g' deployment.yaml"
+                sh "sed -i 's|{{NGINX_TAG}}|${NGINX_TAG}|g' deployment.yaml"
+
+                // Deploy NGINX image to AKS
+                sh "kubectl apply -f deployment.yaml"
             }
         }
 
