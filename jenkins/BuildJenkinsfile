@@ -1,0 +1,103 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'NGINX_TAG', defaultValue: '', description: 'NGINX Tag')
+    }
+
+    environment {
+        DOCKER_HUB_REPO = 'dnajih/sendimage'  // Update with your Docker Hub repository
+        IMAGE_NAME = 'dnajih/sendimage'
+        IMAGE_TAG = "${params.NGINX_TAG}"
+        LOWERCASE_REPO = DOCKER_HUB_REPO.toLowerCase()  // Convert repository name to lowercase
+        IMAGE_FULL_TAG = "${LOWERCASE_REPO}:${IMAGE_TAG}"
+    }
+
+    stages {
+        stage('Clone Git Repository') {
+            steps {
+                // Clone the Git repository
+                git branch: 'master', url: 'https://github.com/Najih00/CICD_jenkins_ansible_k8.git'
+            }
+        }
+
+        stage('Retrieve Files') {
+            steps {
+                // Navigate to the ansible folder and retrieve playbook
+                dir('ansible') {
+                    sh 'cp playbook.yaml ../'
+                }
+
+                // Navigate to the jenkins folder and retrieve Jenkins file
+                dir('jenkins') {
+                    sh 'cp Jenkinsfile ../'
+                }
+
+                // Navigate to the kubemanifest folder and retrieve deployment.yaml
+                dir('kubemanifest') {
+                    sh 'cp deployment.yaml ../'
+                }
+
+                dir('kubemanifest') {
+                    sh 'cp nginx-service.yaml ../'
+                }
+
+                dir('docker') {
+                   sh 'cp Dockerfile ../'
+                  sh 'cp index.html ../'
+
+                }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build Docker image
+                sh 'docker build -t $IMAGE_FULL_TAG .'
+            }
+        }
+
+
+        stage('Push Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                    // Log in to Docker Hub
+                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    
+                    // Push the image to Docker Hub
+                    sh "docker push $IMAGE_FULL_TAG"
+                }
+            }
+        }
+
+        stage('Modify deployment file with env variables') {
+            steps {
+                // Replace placeholders in deployment.yaml with actual image details
+               // sh "sed -i \"s|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g\" deployment.yaml"
+                // sh "sed -i \"s|{{NGINX_TAG}}|${IMAGE_TAG}|g\" deployment.yaml"
+
+                // Replace placeholders in deployment.yaml with actual image details
+                sh "envsubst < deployment.yaml > deployment.yaml.tmp && mv deployment.yaml.tmp deployment.yaml"
+                
+                // Print the modified deployment file for verification
+                sh "cat deployment.yaml"
+            }
+        }
+
+        stage('Test Kubeconfig') {
+            steps {
+                withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
+                    sh 'cat $KUBECONFIG > kubeconfig.yaml'
+                }
+            }
+        }
+
+        stage('Deploy with Ansible') {
+            steps {
+                script {
+                    // Run Ansible playbook
+                    sh 'ansible-playbook playbook.yaml'
+                }
+            }
+        }
+    }
+}
