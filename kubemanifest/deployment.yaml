@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: ${DOCKER_HUB_REPO}/nginx:${NGINX_TAG}
+        image: ${DOCKER_HUB_REPO}:${NGINX_TAG}
         ports:
         - containerPort: 80
