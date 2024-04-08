@@ -48,9 +48,9 @@ pipeline {
                     sh "docker push $IMAGE_FULL_TAG"
                 }
             }
+        }
 
-
-        stage('Modify deplyment fiel with env variables') {
+        stage('Modify deployment file with env variables') {
             steps {
                 // Replace placeholders in deployment.yaml with actual image details
                 sh "sed -i 's|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g' deployment.yaml"
@@ -58,13 +58,10 @@ pipeline {
             }
         }
 
-
-        
         stage('Test Kubeconfig') {
             steps {
                 withCredentials([file(credentialsId: 'config', variable: 'KUBECONFIG')]) {
                     sh 'cat $KUBECONFIG > kubeconfig.yaml'
-                  //  sh 'cat kubeconfig.yaml' // Display kubeconfig content (optional)
                 }
             }
         }
