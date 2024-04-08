@@ -43,10 +43,10 @@ pipeline {
                 }
 
                 dir('docker') {
-                   sh 'cp Dockerfile ../'
-                  sh 'cp index.html ../'
-
+                    sh 'cp Dockerfile ../'
+                    sh 'cp index.html ../'
                 }
+            }
         }
 
         stage('Build Docker Image') {
