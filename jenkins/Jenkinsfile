@@ -42,17 +42,6 @@ pipeline {
             }
         }
 
-        stage('Deploy NGINX to AKS') {
-            steps {
-                // Replace placeholders in deployment.yaml with actual image details
-                sh "sed -i 's|{{DOCKER_HUB_REPO}}|${DOCKER_HUB_REPO}|g' deployment.yaml"
-                sh "sed -i 's|{{NGINX_TAG}}|${NGINX_TAG}|g' deployment.yaml"
-
-                // Deploy NGINX image to AKS
-                sh "kubectl apply -f deployment.yaml"
-            }
-        }
-
         stage('Deploy with Ansible') {
             steps {
                 script {
