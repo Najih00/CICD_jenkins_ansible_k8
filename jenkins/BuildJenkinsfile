@@ -61,7 +61,8 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
                     // Log in to Docker Hub
-                    sh "docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD"
+                    // adding \ the skip to resolve problem with jenkins worning
+                    sh "docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD"
                     
                     // Push the image to Docker Hub
                     sh "docker push $IMAGE_FULL_TAG"
