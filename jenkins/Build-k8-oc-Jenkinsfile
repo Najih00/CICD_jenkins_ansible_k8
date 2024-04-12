@@ -104,7 +104,7 @@ pipeline {
                 script {
                     // Run Ansible playbook
                     sh 'ansible-playbook playbook.yaml'
-
+                    //  check the files
                     sh 'ls -la'
                 }
             }
@@ -113,7 +113,7 @@ pipeline {
         stage('test Execute oc login logut playbook ') {
             steps {
                 withCredentials([usernamePassword(credentialsId: env.credentialsId, passwordVariable: 'OCP_TOKEN', usernameVariable: 'OCP_URL')]) {
-                    sh "ansible-playbook oc-playbook.yml"
+                    sh "ansible-playbook oc-playbook.yaml"
                 }
             }
         }
