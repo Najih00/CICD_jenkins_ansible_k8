@@ -1,5 +1,5 @@
 ---
-- name: Login to OpenShift using Jenkins credentials
+- name: Login to OpenShift using Jenkins credentials and deploy
   hosts: localhost
   gather_facts: no
   tasks:
@@ -7,3 +7,13 @@
       command: "sh login-to-ocp.sh"
       register: login_output
       changed_when: false
+
+- name: Deploy Application to OpenShift
+  hosts: localhost
+  tasks:
+    - name: Apply test deployment
+      command: oc apply -f deployment.yaml
+
+    # Apply OpenShift Service
+    - name: Apply OpenShift Service
+      command: oc apply -f nginx-service.yaml
