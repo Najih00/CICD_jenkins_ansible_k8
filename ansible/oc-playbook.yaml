@@ -1,0 +1,9 @@
+---
+- name: Login to OpenShift using Jenkins credentials
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Execute login script
+      command: "sh login-to-ocp.sh"
+      register: login_output
+      changed_when: false
