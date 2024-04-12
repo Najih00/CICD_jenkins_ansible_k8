@@ -104,6 +104,8 @@ pipeline {
                 script {
                     // Run Ansible playbook
                     sh 'ansible-playbook playbook.yaml'
+
+                    sh 'ls -la'
                 }
             }
         }
