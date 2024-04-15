@@ -42,6 +42,9 @@ pipeline {
 
                 dir('kubemanifest') {
                     sh 'cp nginx-service.yaml ../'
+                    sh 'cp  oc-service.yaml ../'
+                    sh 'cp  oc-route.yaml ../'
+                  
                 }
 
                 dir('docker') {
