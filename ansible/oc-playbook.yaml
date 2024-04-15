@@ -16,4 +16,9 @@
 
     # Apply OpenShift Service
     - name: Apply OpenShift Service
-      command: oc apply -f nginx-service.yaml
+      command: oc apply -f oc-service.yaml
+
+
+    # Apply OpenShift Route
+    - name: Apply OpenShift Service
+      command: oc apply -f oc-route.yaml
