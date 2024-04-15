@@ -16,4 +16,4 @@ spec:
       - name: nginx
         image: ${DOCKER_HUB_REPO}:${NGINX_TAG}
         ports:
-        - containerPort: 80
+        - containerPort: 8080
